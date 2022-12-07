@@ -1,0 +1,82 @@
+body {
+    padding: 0;
+    margin: 0;
+    background-color: rgb(34, 40, 49);
+    color: rgb(238, 238, 238);
+}
+
+a:hover {
+    color: rgb(0, 173, 181) !important;
+}
+
+.nav {
+    margin: 30px auto 50px auto;
+}
+.nav a {
+    padding: 10px;
+    margin: auto 10px;
+    text-decoration: none;
+    font-size: 120%;
+    color:rgb(238, 238, 238);
+    font-weight: 900;
+    letter-spacing: 1px;
+    transition: all 0.3s;
+}
+
+input[type="text"] {
+    width: 300px; 
+    height:50px; 
+    float: left;
+    color:rgb(238, 238, 238);
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.253);
+    padding: 0px 10px;
+    border: none;
+}
+input[type="text"]:focus {
+    outline: none;
+}
+
+.btn-addnew-channel {
+    background-color: rgb(0, 173, 181);
+    color: rgb(238, 238, 238);
+    font-weight: bold;
+    width: 200px;
+    height: 50px;
+    border-radius: 5px;
+    float: right;
+}
+
+table tr:nth-child(even) {
+    background-color: rgb(46, 54, 66);
+}
+
+table td, table th {
+    color:rgb(238, 238, 238) !important;
+    padding: 20px !important;
+    text-align: center;
+}
+
+table td a {
+    color:rgb(238, 238, 238) !important;
+    text-decoration: none !important;
+    transition: all 0.3s;
+}
+
+table i {
+    font-size: 20px;
+}
+.bi-trash {
+    color: rgb(190, 0, 0);
+}
+
+.page-link {
+    background-color: transparent !important;
+    color: rgb(238, 238, 238) !important;
+    border: none;
+}
+.page-link:active {
+    outline: none;
+    border: none;
+}
+
