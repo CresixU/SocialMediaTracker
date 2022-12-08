@@ -9,6 +9,24 @@
     <link href="css/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   </head>
   <body>
+    <div class="modal" tabindex="-1" id="modal" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Czy chcesz usunąć tego użytkownika?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="delete_button_modal" class="btn btn-primary">Tak</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="container">
         <!-- NAV BAR -->
         <div class="nav d-flex justify-content-center">
@@ -78,7 +96,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script>
         var myData, newData = [];
-
+        var $userDeleteId = null;
+        //Load data on change input
         $('#searchbox').on('change', function (){
         $.ajax({
             url: `http://162.19.172.197:8080/api/v1/profile?page=0&size=20`,
@@ -90,21 +109,41 @@
                 console.log(myData[i].name);
                 $(".table").append( $('<tr><td>'+myData[i].name+'</td><td></td></tr>') );
               }
-
             });
         })
-
+        //Startup load data
         $.ajax({
             url: `http://162.19.172.197:8080/api/v1/profile?page=0&size=20`,
         })
             .done(res => {
               myData = res.data;
-              //console.log(res.data[0]);
               for(var i=0; i<20;i++) {
                 var channelUniqueName = myData[i].url.substring(myData[i].url.lastIndexOf('/') + 1);
-                $(".table").append( $('<tr><td>'+myData[i].name+'</td><td>'+channelUniqueName+'</td><td><a href="'+myData[i].url+'">'+myData[i].media+'</a></td><td><a href="/streams/profile/'+myData[i].id+'"><i class="bi bi-card-list"></i></a></td><td><a href="#"><i class="bi bi-trash"></i></a></td></tr>') );
+                $(".table").append( $('<tr><td>'+myData[i].name+'</td><td>'+channelUniqueName+'</td><td><a href="'+myData[i].url+'">'+myData[i].media+'</a></td><td><a href="/streams/profile/'+myData[i].id+'"><i class="bi bi-card-list"></i></a></td><td><a href="#" data-id="'+myData[i].id+'" class="delete-button"><i class="bi bi-trash"></i></a></td></tr>') );
               }
             });
+
+        //Delete function in modal -> Error 405 not allowed    
+        $(document).ready(function() {
+          $(document).on('click', '#delete_button_modal', function() {
+            $.ajax({
+              type: "DELETE",
+              url: "/api/v1/profile/?id="+$userDeleteId,
+              success: console.log('Deleted'+$userDeleteId),
+              failed: console.log('failed')
+            })
+            $('#modal').modal('toggle');
+          })
+        })
+
+        //Clicked on trash -> delete user's button (Show modal)
+        $(document).ready(function() {
+          $(document).on('click', '.delete-button', function() {
+            $userDeleteId = $(this).attr('data-id');
+            $('#modal').modal('toggle');
+          })
+        })
+
 
     </script>
   </body>
