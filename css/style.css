@@ -80,3 +80,15 @@ table i {
     border: none;
 }
 
+.form-group label {
+    color: rgb(34, 40, 49) !important;
+}
+.form-group input {
+    background-color: white !important;
+    color: black !important;
+    margin: 10px auto !important;
+}
+.modal-content {
+    background-color: rgb(194, 194, 194) !important;
+}
+
