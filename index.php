@@ -9,22 +9,45 @@
     <link href="css/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   </head>
   <body>
+    <!-- Delete user modal -->
     <div class="modal" tabindex="-1" id="modal" role="dialog">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
           <div class="modal-body">
             <p>Czy chcesz usunąć tego użytkownika?</p>
           </div>
           <div class="modal-footer">
             <button type="button" id="delete_button_modal" class="btn btn-primary">Tak</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+            <button type="button" onclick="hide()" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
           </div>
         </div>
+      </div>
+    </div>
+    <!-- Add new user modal -->
+    <div class="modal fade" id="modal_channel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <form>
+          <div class="modal-content">
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="channel-name" class="w-100">Nazwa użytkownika:</label>
+                <input type="text" required class="form-control w-100" id="channel-name">
+                <label for="channel-url" class="w-100">Link do kanału:</label>
+                <input type="text" required class="form-control w-100" id="channel-url">
+                <select class="form-select w-100" required aria-label="Default select example" id="channel-platform">
+                <option value="null" selected>WYBIERZ PLATFORME</option>
+                <option value="YOUTUBE">YOUTUBE</option>
+                <option value="TWITCH">TWITCH</option>
+                <option value="FACEBOOK">FACEBOOK</option>
+              </select>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" onclick="hide2()" data-dismiss="modal">Anuluj</button>
+              <button type="submit" id="add_new_channel_button" class="btn btn-primary">Dodaj użytkownika</button>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
     <div class="container">
@@ -40,7 +63,7 @@
         <div>
           <div>
             <input type="text" id="searchbox" placeholder="Znajdź kanał">
-            <button class="btn-addnew-channel">DODAJ KANAŁ</button>
+            <button class="btn-addnew-channel" id="show_modal_new_channel">DODAJ KANAŁ</button>
           </div>
           <table class="table">
             <thead>
@@ -52,28 +75,7 @@
                 <th>Akcje</th>
               </tr>
             </thead>
-            <tbody class="table">
-              <tr>
-                <td>Nazwa</td>
-                <td>@nazwaid</td>
-                <td><a href="#">YOUTUBE</a></td>
-                <td><a href="#"><i class="bi bi-card-list"></i></a></td>
-                <td><a href="#"><i class="bi bi-trash"></i></a></td>
-              </tr>
-              <tr>
-                <td>Nazwa</td>
-                <td>@nazwaid</td>
-                <td><a href="#">TWITCH</a></td>
-                <td><a href="#"><i class="bi bi-card-list"></i></a></td>
-                <td><a href="#"><i class="bi bi-trash"></i></a></td>
-              </tr>
-              <tr>
-                <td>Nazwa</td>
-                <td>@nazwaid</td>
-                <td><a href="#">YOUTUBE</a></td>
-                <td><a href="#"><i class="bi bi-card-list"></i></a></td>
-                <td><a href="#"><i class="bi bi-trash"></i></a></td>
-              </tr>
+            <tbody class="contenttable">
             </tbody>
           </table>
           <nav aria-label="Page navigation example">
@@ -97,7 +99,7 @@
     <script>
         var myData, newData = [];
         var $userDeleteId = null;
-        //Load data on change input
+        //Load data on change input, brak dokumentacji na filtry
         $('#searchbox').on('change', function (){
         $.ajax({
             url: `http://162.19.172.197:8080/api/v1/profile?page=0&size=20`,
@@ -106,15 +108,13 @@
               newData = res.data;
               console.log(res.data[0]);
               for(var i=0; i<20;i++) {
-                console.log(myData[i].name);
-                $(".table").append( $('<tr><td>'+myData[i].name+'</td><td></td></tr>') );
+                $(".contenttable").append( $('<tr><td>'+myData[i].name+'</td><td></td></tr>') );
               }
             });
         })
         //Startup load data
         $.ajax({
-            url: `http://162.19.172.197:8080/api/v1/profile?page=0&size=20`,
-        })
+            url: `http://162.19.172.197:8080/api/v1/profile?page=0&size=20`,})
             .done(res => {
               myData = res.data;
               for(var i=0; i<20;i++) {
@@ -123,28 +123,59 @@
               }
             });
 
-        //Delete function in modal -> Error 405 not allowed    
+        //Delete function in modal 
         $(document).ready(function() {
           $(document).on('click', '#delete_button_modal', function() {
             $.ajax({
-              type: "DELETE",
-              url: "/api/v1/profile/?id="+$userDeleteId,
-              success: console.log('Deleted'+$userDeleteId),
+              type: 'DELETE',
+              url: 'http://162.19.172.197:8080/api/v1/profile?id='+$userDeleteId,
+              success: console.log('Deleted '+$userDeleteId),
               failed: console.log('failed')
             })
             $('#modal').modal('toggle');
           })
         })
 
-        //Clicked on trash -> delete user's button (Show modal)
+        //Clicked on trash -> Show modal
         $(document).ready(function() {
           $(document).on('click', '.delete-button', function() {
             $userDeleteId = $(this).attr('data-id');
             $('#modal').modal('toggle');
           })
         })
+        //Hide modal on cancel or X
+        function hide() {
+          $('#modal').modal('toggle');
+        }
+        //Hide modal on cancel or X
+        function hide2() {
+          $('#modal_channel').modal('toggle');
+        }
 
+        //Add new channel function
+        $("#add_new_channel_button").click( function() {
+          var channelName = $("#channel-name").val();
+          var channelUrl = $("#channel-url").val();
+          var channelPlatform = $("#channel-platform").val();
+          if(channelName === "" || channelUrl === "" || channelPlatform === "null") return;
+          $.ajax({
+            type: 'POST',
+            url: 'http://162.19.172.197:8080/api/v1/profile/',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            data: '[{"id": null, "name": "'+channelName+'", "url": "'+channelUrl+'", "media": "'+channelPlatform+'"}]',
+            success: console.log('Successed'),
+            failed: console.log('Failed')
+          })
+          $('#modal_channel').modal('toggle');
+        })
 
+        //Add new channel -> show modal
+        $(document).ready(function() {
+          $(document).on('click', '#show_modal_new_channel', function() {
+            $('#modal_channel').modal('toggle');
+          })
+        })
     </script>
   </body>
 </html>
