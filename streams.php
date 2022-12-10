@@ -31,24 +31,6 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>Nazwa</td>
-                    <td>Losowy tytuł streamu ofiary</td>
-                    <td><a href="#">2022-12-01 20:00</a></td>
-                    <td><a href="#"><i class="bi bi-bar-chart-line"></i></a></td>
-                </tr>
-                <tr>
-                    <td>Nazwa</td>
-                    <td>Losowy tytuł streamu ofiary</td>
-                    <td><a href="#">2022-12-01 20:00</a></td>
-                    <td><a href="#"><i class="bi bi-bar-chart-line"></i></a></td>
-                </tr>
-                <tr>
-                    <td>Nazwa</td>
-                    <td>Losowy tytuł streamu ofiary</td>
-                    <td><a href="#">2022-12-01 20:00</a></td>
-                    <td><a href="#"><i class="bi bi-bar-chart-line"></i></a></td>
-                </tr>
                 </tbody>
             </table>
         </div>
