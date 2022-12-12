@@ -97,24 +97,36 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script>
-        var myData, newData = [];
+        var myData, newData, newData2 = [];
         var $userDeleteId = null;
-        //Load data on change input, brak dokumentacji na filtry
+        var comparingText = null;
+        //Load data on change input
         $('#searchbox').on('change', function (){
-        $.ajax({
-            url: `http://162.19.172.197:8080/api/v1/profile?page=0&size=20`,
-        })
+          $('tbody').empty();
+          $.ajax({
+              url: `http://162.19.172.197:8080/api/v1/profile?page=0&size=9999`,
+          })
             .done(res => {
-              newData = res.data;
-              console.log(res.data[0]);
-              for(var i=0; i<20;i++) {
-                $(".contenttable").append( $('<tr><td>'+myData[i].name+'</td><td></td></tr>') );
+              newData = [];
+              res.data.forEach(e => newData.push(e.name.toUpperCase()));
+              newData2 = newData.map(e => e.indexOf($('#searchbox').val().toUpperCase()));
+              for(var j=0; j<newData2.length;j++)
+              {
+                if(newData2[j] > -1) newData2[j] = j;
+              }
+              newData2 = newData2.filter(e => e > -1);
+                
+              for(var k=0; k<newData2.length;k++) {
+                var i = newData2[k];
+                var channelUniqueName = res.data[i].url.substring(res.data[i].url.lastIndexOf('/') + 1);
+                $(".table").append( $('<tr><td>'+res.data[i].name+'</td><td>'+channelUniqueName+'</td><td><a href="'+res.data[i].url+'">'+res.data[i].media+'</a></td><td><a href="/streams/profile/'+res.data[i].id+'"><i class="bi bi-card-list"></i></a></td><td><a href="#" data-id="'+res.data[i].id+'" class="delete-button"><i class="bi bi-trash"></i></a></td></tr>') );
               }
             });
         })
         //Startup load data
         $.ajax({
-            url: `http://162.19.172.197:8080/api/v1/profile?page=0&size=20`,})
+            url: `http://162.19.172.197:8080/api/v1/profile?page=0&size=20`,
+          })
             .done(res => {
               myData = res.data;
               for(var i=0; i<20;i++) {
@@ -176,6 +188,7 @@
             $('#modal_channel').modal('toggle');
           })
         })
+
     </script>
   </body>
 </html>
