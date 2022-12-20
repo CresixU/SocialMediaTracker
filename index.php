@@ -176,7 +176,7 @@
               myData = res.data;
               for(var i=0; i<size;i++) {
                 var channelUniqueName = myData[i].url.substring(myData[i].url.lastIndexOf('/') + 1);
-                $(".table").append( $('<tr><td>'+myData[i].name+'</td><td>'+channelUniqueName+'</td><td><a href="'+myData[i].url+'">'+myData[i].media+'</a></td><td><a href="/streams/profile/'+myData[i].id+'"><i class="bi bi-card-list"></i></a></td><td><a href="#" data-id="'+myData[i].id+'" class="delete-button"><i class="bi bi-trash"></i></a></td></tr>') );
+                $(".table").append( $('<tr><td>'+myData[i].name+'</td><td>'+channelUniqueName+'</td><td><a href="'+myData[i].url+'">'+myData[i].media+'</a></td><td><a href="./profile?id='+myData[i].id+'"><i class="bi bi-card-list"></i></a></td><td><a href="#" data-id="'+myData[i].id+'" class="delete-button"><i class="bi bi-trash"></i></a></td></tr>') );
               }
               $('.pagination').empty();
               if(currentPage > 2) {
