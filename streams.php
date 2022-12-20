@@ -34,6 +34,11 @@
                 </tbody>
             </table>
         </div>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination justify-content-center">
+              
+          </ul>
+        </nav>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
@@ -41,9 +46,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script>
         var myData = [];
-
+        var currentPage = 0;
+        var size = 10;
+        var maxPages = 99;
+/*
         $.ajax({
-            url: `http://162.19.172.197:8080/api/v1/streaming?page=0&size=10`,
+            url: "http://192.109.244.120:8080/api/v1/streaming?page=0&size=10",
         })
             .done(res => {
               myData = res.data;
@@ -55,6 +63,47 @@
                 $(".table").append( $('<tr><td><a href="'+myData[i].profile.url+'">'+myData[i].profile.name+'</a></td><td><a href="'+myData[i].url+'">'+myData[i].title+'</a></td><td>'+streamStartTime+'</td><td><a href="/streams/'+myData[i].id+'"><i class="bi bi-bar-chart-line"></i></a></td></tr>') );
               }
             });
+*/
+         //Pagination
+         function ShowData(page,size) {
+          currentPage = page;
+          $.ajax({
+            url: "http://192.109.244.120:8080/api/v1/streaming?page="+page+"&size="+size,
+          })
+            .done(res => {
+              $('tbody').empty();
+              maxPages = res.totalPages;
+              myData = res.data;
+              //console.log(res.data[0]);
+              for(var i=0; i<size;i++) {
+                var interpolatedDate = myData[i].startAt.substr(0,10);
+                var interpolatedTime = myData[i].startAt.substr(11,5);
+                var streamStartTime = interpolatedDate + ' ' + interpolatedTime;
+                $(".table").append( $('<tr><td><a href="'+myData[i].profile.url+'">'+myData[i].profile.name+'</a></td><td><a href="'+myData[i].url+'">'+myData[i].title+'</a></td><td>'+streamStartTime+'</td><td><a href="./streamtemplate.php?id='+myData[i].id+'"><i class="bi bi-bar-chart-line"></i></a></td></tr>') );
+              }
+              $('.pagination').empty();
+              if(currentPage > 2) {
+                $(".pagination").append( $('<li class="page-item"><a class="page-link" href="#" onclick="ShowData(0,'+size+')">1</a></li>') );
+                $(".pagination").append( $('<li class="page-item"><a class="page-link" href="#">...</a></li>') );
+              }
+              for(var i=(currentPage-2);i<=(currentPage+2);i++) {
+                if(i>=0 && i<maxPages) {
+                  if(i==currentPage)
+                    $(".pagination").append( $('<li class="page-item"><a class="page-link current-page" style="border: 1px solid #5858db !important;border-radius: 30px !important;color: white !important;" href="#" onclick="ShowData('+i+','+size+')">'+(i+1)+'</a></li>') );
+                  else
+                    $(".pagination").append( $('<li class="page-item"><a class="page-link" href="#" onclick="ShowData('+i+','+size+')">'+(i+1)+'</a></li>') );
+                }
+              }
+              if(maxPages>3 && currentPage < (maxPages-3)) {
+                $(".pagination").append( $('<li class="page-item"><a class="page-link" href="#">...</a></li>') );
+                $(".pagination").append( $('<li class="page-item"><a class="page-link" href="#" onclick="ShowData('+(maxPages-1)+','+size+')">'+(maxPages)+'</a></li>') );
+              }
+              
+            });
+        }
+
+        //Load data on start
+        ShowData(0,10);
     </script>
   </body>
 </html>
