@@ -95,7 +95,7 @@
         var size = 20;
         var maxPages = 99;
         var searchPhrase = "";
-        
+
         //Load data on change input
         $('#searchbox').on('change', function (){
           $('tbody').empty();
@@ -193,7 +193,7 @@
               }
               if(maxPages>3 && currentPage < (maxPages-3)) {
                 $(".pagination").append( $('<li class="page-item"><a class="page-link" href="#">...</a></li>') );
-                $(".pagination").append( $('<li class="page-item"><a class="page-link" href="#" onclick="ShowData('+(maxPages-1)+','+size+',"'+searchPhrase+'")">'+(maxPages)+'</a></li>') );
+                $(".pagination").append( $('<li class="page-item"><a class="page-link" href="#" onclick="ShowData('+(maxPages-1)+','+size+','+searchPhrase+')">'+(maxPages)+'</a></li>') );
               }
               
             });
