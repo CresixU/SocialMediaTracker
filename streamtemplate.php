@@ -14,8 +14,20 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.0.1/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.0.1/dist/chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.0.1/dist/helpers.min.js"></script>
+    <style>
+        a {
+            text-decoration: none !important;
+            color: rgb(238, 238, 238) !important;
+            transition: 0.5s;
+        }
+        .title {
+            font-weight: 700;
+            font-size: 120%;
+        }
+    </style>
   </head>
   <body>
+    <?php echo "<span id='web-user-id' style='display: none;'>" . $_GET['id']."</span>";?>
     <div class="container">
         <!-- NAV BAR -->
         <div class="nav d-flex justify-content-center">
@@ -26,36 +38,36 @@
                 <a href="./streams.php">TRWAJĄCE STREAMY</a>
             </div>
         </div>
-        <div class="row text-center">
-            <h1><a href="#">TYTUŁ STREAMU</a></h1>
+        <div class="row text-center mt-3 mb-5">
+            <h1><a id="stream-title" href="#">TYTUŁ STREAMU</a></h1>
         </div>
         <div class="row">
             <div class="col text-center">
-                <p>Nazwa kanału</p>
+                <p class="title">Nazwa kanału</p>
                 <p id="channel-name"></p>
             </div>
             <div class="col text-center">
-                <p>Źródło</p>
+                <p class="title">Źródło</p>
                 <p id="channel-source"></p>
             </div>
             <div class="col text-center">
-                <p>Rozpoczęty</p>
+                <p class="title">Rozpoczęty</p>
                 <p id="stream-start"></p>
             </div>
             <div class="col text-center">
-                <p>Zakończony</p>
+                <p class="title">Zakończony</p>
                 <p id="stream-end"></p>
             </div>
             <div class="col text-center">
-                <p>Trwał</p>
+                <p class="title">Czas trwania</p>
                 <p id="stream-total"></p>
             </div>
             <div class="col text-center">
-                <p>Średnia ilość widzów</p>
+                <p class="title">Średnia ilość widzów</p>
                 <p id="stream-avg-views"></p>
             </div>
             <div class="col text-center">
-                <p>Największa ilość widzów</p>
+                <p class="title">Największa ilość widzów</p>
                 <p id="stream-top-views"></p>
             </div>
         </div>
@@ -65,9 +77,12 @@
     <script>
         const ctx = document.getElementById('myChart');
         var myData = [];
+        var streams = [];
         var time = [];
         var watchers = [];
         var avg = 0;
+        var streamId = document.getElementById('web-user-id').innerHTML;
+        var streamTitle, streamUrl, streamSource, channelName;
 
         //Chart
         var chart = new Chart(ctx, {
@@ -90,10 +105,8 @@
             }
         });
 
-
-
         $.ajax({
-                url: `http://162.19.172.197:8080/api/v3/watchers/stream/11`,
+                url: `http://192.109.244.120:8080/api/v3/watchers/stream/`+streamId,
             })
             .done(res => {
                 myData = res;
@@ -103,17 +116,32 @@
                 for(var i=0; i<myData.length; i++) {
                     avg+=parseInt(myData[i].watchers);
                 }
-                document.getElementById('stream-avg-views').innerHTML = Math.round(avg/=myData.length);
-                document.getElementById('stream-start').innerHTML = time[0];
-                if(watchers[watchers.length-1] != 0) document.getElementById('stream-end').innerHTML = "Nadal trwa";
-                else document.getElementById('stream-end').innerHTML = time[time.length-1];
-                document.getElementById('stream-total').innerHTML = CalcData(new Date(myData[myData.length-1].at) - new Date(myData[0].at));
-                document.getElementById('stream-top-views').innerHTML = Math.max.apply(Math, watchers);
+                $.ajax({
+                    url: "http://192.109.244.120:8080/api/v1/streaming?page=0&size=9999",
+                })
+                .done(res => {
+                    var stream = res.data.find(s => s.id == streamId);
+                    streamTitle = stream.title;
+                    streamUrl = stream.url;
+                    streamSource = stream.profile.media;
+                    channelName = stream.profile.name;
+                    SetStreamData();
+                })
             });
-                 
-        
-        
 
+        function SetStreamData() {
+            console.log(streamTitle);
+            document.getElementById('stream-title').innerHTML = streamTitle;
+            document.getElementById('stream-title').setAttribute("href", streamUrl);
+            document.getElementById('channel-source').innerHTML = streamSource;
+            document.getElementById('channel-name').innerHTML = channelName;
+            document.getElementById('stream-avg-views').innerHTML = Math.round(avg/=myData.length);
+            document.getElementById('stream-start').innerHTML = time[0];
+            if(watchers[watchers.length-1] != 0) document.getElementById('stream-end').innerHTML = "Nadal trwa";
+            else document.getElementById('stream-end').innerHTML = time[time.length-1];
+            document.getElementById('stream-total').innerHTML = CalcData(new Date(myData[myData.length-1].at) - new Date(myData[0].at));
+            document.getElementById('stream-top-views').innerHTML = Math.max.apply(Math, watchers);
+        }
 
         function CalcData(ms) {
             var hours, min, seconds = 0;
