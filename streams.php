@@ -64,7 +64,7 @@
                 var interpolatedDate = myData[i].startAt.substr(0,10);
                 var interpolatedTime = myData[i].startAt.substr(11,5);
                 var streamStartTime = interpolatedDate + ' ' + interpolatedTime;
-                $(".table").append( $('<tr><td><a href="'+myData[i].profile.url+'">'+myData[i].profile.name+'</a></td><td><a href="'+myData[i].url+'">'+myData[i].title+'</a></td><td>'+streamStartTime+'</td><td><a href="./streamtemplate.php?id='+myData[i].id+'"><i class="bi bi-bar-chart-line"></i></a></td></tr>') );
+                $(".table").append( $('<tr><td><a href="'+myData[i].profile.url+'">'+myData[i].profile.name+'</a></td><td><a href="'+myData[i].url+'">'+myData[i].title+'</a></td><td>'+streamStartTime+'</td><td><a href="./stream.php?id='+myData[i].id+'"><i class="bi bi-bar-chart-line"></i></a></td></tr>') );
               }
               $('.pagination').empty();
               if(currentPage > 2) {
