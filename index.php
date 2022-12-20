@@ -95,47 +95,14 @@
         var size = 20;
         var maxPages = 99;
         var searchPhrase = "";
+        
         //Load data on change input
         $('#searchbox').on('change', function (){
           $('tbody').empty();
           var searchPhrase = $('#searchbox').val();
           ShowData(currentPage,size,searchPhrase)
-          /*
-          $.ajax({
-              url: `http://192.109.244.120:8080/api/v1/profile?page=0&size=9999`,
-          })
-            .done(res => {
-              newData = [];
-              res.data.forEach(e => newData.push(e.name.toUpperCase()));
-              newData2 = newData.map(e => e.indexOf($('#searchbox').val().toUpperCase()));
-              for(var j=0; j<newData2.length;j++)
-              {
-                if(newData2[j] > -1) newData2[j] = j;
-              }
-              newData2 = newData2.filter(e => e > -1);
-                
-              for(var k=0; k<newData2.length;k++) {
-                var i = newData2[k];
-                var channelUniqueName = res.data[i].url.substring(res.data[i].url.lastIndexOf('/') + 1);
-                $(".table").append( $('<tr><td>'+res.data[i].name+'</td><td>'+channelUniqueName+'</td><td><a href="'+res.data[i].url+'">'+res.data[i].media+'</a></td><td><a href="/streams/profile/'+res.data[i].id+'"><i class="bi bi-card-list"></i></a></td><td><a href="#" data-id="'+res.data[i].id+'" class="delete-button"><i class="bi bi-trash"></i></a></td></tr>') );
-              }
-            });
-            */
-
         })
-        //Startup load data
-        /*
-        $.ajax({
-            url: `http://192.109.244.120:8080/api/v1/profile?page=0&size=20`,
-          })
-            .done(res => {
-              myData = res.data;
-              for(var i=0; i<20;i++) {
-                var channelUniqueName = myData[i].url.substring(myData[i].url.lastIndexOf('/') + 1);
-                $(".table").append( $('<tr><td>'+myData[i].name+'</td><td>'+channelUniqueName+'</td><td><a href="'+myData[i].url+'">'+myData[i].media+'</a></td><td><a href="/streams/profile/'+myData[i].id+'"><i class="bi bi-card-list"></i></a></td><td><a href="#" data-id="'+myData[i].id+'" class="delete-button"><i class="bi bi-trash"></i></a></td></tr>') );
-              }
-            });
-        */
+
         //Delete function in modal 
         $(document).ready(function() {
           $(document).on('click', '#delete_button_modal', function() {

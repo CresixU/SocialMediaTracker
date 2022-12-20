@@ -49,21 +49,7 @@
         var currentPage = 0;
         var size = 10;
         var maxPages = 99;
-/*
-        $.ajax({
-            url: "http://192.109.244.120:8080/api/v1/streaming?page=0&size=10",
-        })
-            .done(res => {
-              myData = res.data;
-              //console.log(res.data[0]);
-              for(var i=0; i<20;i++) {
-                var interpolatedDate = myData[i].startAt.substr(0,10);
-                var interpolatedTime = myData[i].startAt.substr(11,5);
-                var streamStartTime = interpolatedDate + ' ' + interpolatedTime;
-                $(".table").append( $('<tr><td><a href="'+myData[i].profile.url+'">'+myData[i].profile.name+'</a></td><td><a href="'+myData[i].url+'">'+myData[i].title+'</a></td><td>'+streamStartTime+'</td><td><a href="/streams/'+myData[i].id+'"><i class="bi bi-bar-chart-line"></i></a></td></tr>') );
-              }
-            });
-*/
+
          //Pagination
          function ShowData(page,size) {
           currentPage = page;
@@ -74,7 +60,6 @@
               $('tbody').empty();
               maxPages = res.totalPages;
               myData = res.data;
-              //console.log(res.data[0]);
               for(var i=0; i<size;i++) {
                 var interpolatedDate = myData[i].startAt.substr(0,10);
                 var interpolatedTime = myData[i].startAt.substr(11,5);
