@@ -80,15 +80,7 @@
           </table>
           <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
-              <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1">Previous</a>
-              </li>
-              <li class="page-item"><a class="page-link" href="#">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item">
-                <a class="page-link" href="#">Next</a>
-              </li>
+              
             </ul>
           </nav>
         </div>
@@ -99,12 +91,18 @@
     <script>
         var myData, newData, newData2 = [];
         var $userDeleteId = null;
-        var comparingText = null;
+        var currentPage = 0;
+        var size = 20;
+        var maxPages = 99;
+        var searchPhrase = "";
         //Load data on change input
         $('#searchbox').on('change', function (){
           $('tbody').empty();
+          var searchPhrase = $('#searchbox').val();
+          ShowData(currentPage,size,searchPhrase)
+          /*
           $.ajax({
-              url: `http://162.19.172.197:8080/api/v1/profile?page=0&size=9999`,
+              url: `http://192.109.244.120:8080/api/v1/profile?page=0&size=9999`,
           })
             .done(res => {
               newData = [];
@@ -122,10 +120,13 @@
                 $(".table").append( $('<tr><td>'+res.data[i].name+'</td><td>'+channelUniqueName+'</td><td><a href="'+res.data[i].url+'">'+res.data[i].media+'</a></td><td><a href="/streams/profile/'+res.data[i].id+'"><i class="bi bi-card-list"></i></a></td><td><a href="#" data-id="'+res.data[i].id+'" class="delete-button"><i class="bi bi-trash"></i></a></td></tr>') );
               }
             });
+            */
+
         })
         //Startup load data
+        /*
         $.ajax({
-            url: `http://162.19.172.197:8080/api/v1/profile?page=0&size=20`,
+            url: `http://192.109.244.120:8080/api/v1/profile?page=0&size=20`,
           })
             .done(res => {
               myData = res.data;
@@ -134,13 +135,13 @@
                 $(".table").append( $('<tr><td>'+myData[i].name+'</td><td>'+channelUniqueName+'</td><td><a href="'+myData[i].url+'">'+myData[i].media+'</a></td><td><a href="/streams/profile/'+myData[i].id+'"><i class="bi bi-card-list"></i></a></td><td><a href="#" data-id="'+myData[i].id+'" class="delete-button"><i class="bi bi-trash"></i></a></td></tr>') );
               }
             });
-
+        */
         //Delete function in modal 
         $(document).ready(function() {
           $(document).on('click', '#delete_button_modal', function() {
             $.ajax({
               type: 'DELETE',
-              url: 'http://162.19.172.197:8080/api/v1/profile?id='+$userDeleteId,
+              url: 'http://192.109.244.120:8080/api/v1/profile?id='+$userDeleteId,
               success: console.log('Deleted '+$userDeleteId),
               failed: console.log('failed')
             })
@@ -172,7 +173,7 @@
           if(channelName === "" || channelUrl === "" || channelPlatform === "null") return;
           $.ajax({
             type: 'POST',
-            url: 'http://162.19.172.197:8080/api/v1/profile/',
+            url: 'http://192.109.244.120:8080/api/v1/profile/',
             dataType: 'json',
             contentType: "application/json; charset=utf-8",
             data: '[{"id": null, "name": "'+channelName+'", "url": "'+channelUrl+'", "media": "'+channelPlatform+'"}]',
@@ -189,6 +190,50 @@
           })
         })
 
+
+        //Pagination
+        function ShowData(page,size,searchPhrase) {
+          var apiUrl;
+          if (searchPhrase == null)
+            apiUrl = "http://192.109.244.120:8080/api/v1/profile?page="+page+"&size="+size+""
+          else
+            apiUrl = "http://192.109.244.120:8080/api/v1/profile/"+searchPhrase+"?page="+page+"&size="+size+"";
+
+          $.ajax({
+            url: apiUrl,
+          })
+            .done(res => {
+              $('tbody').empty();
+              currentPage = page;
+              maxPages = res.totalPages;
+              myData = res.data;
+              for(var i=0; i<size;i++) {
+                var channelUniqueName = myData[i].url.substring(myData[i].url.lastIndexOf('/') + 1);
+                $(".table").append( $('<tr><td>'+myData[i].name+'</td><td>'+channelUniqueName+'</td><td><a href="'+myData[i].url+'">'+myData[i].media+'</a></td><td><a href="/streams/profile/'+myData[i].id+'"><i class="bi bi-card-list"></i></a></td><td><a href="#" data-id="'+myData[i].id+'" class="delete-button"><i class="bi bi-trash"></i></a></td></tr>') );
+              }
+              $('.pagination').empty();
+              if(currentPage > 2) {
+                $(".pagination").append( $('<li class="page-item"><a class="page-link" href="#" onclick="ShowData(0,'+size+','+searchPhrase+')">1</a></li>') );
+                $(".pagination").append( $('<li class="page-item"><a class="page-link" href="#">...</a></li>') );
+              }
+              for(var i=(currentPage-2);i<=(currentPage+2);i++) {
+                if(i>=0 && i<maxPages) {
+                  if(i==currentPage)
+                    $(".pagination").append( $('<li class="page-item"><a class="page-link current-page" style="border: 1px solid #5858db !important;border-radius: 30px !important;color: white !important;" href="#" onclick="ShowData('+i+','+size+','+searchPhrase+')">'+(i+1)+'</a></li>') );
+                  else
+                    $(".pagination").append( $('<li class="page-item"><a class="page-link" href="#" onclick="ShowData('+i+','+size+','+searchPhrase+')">'+(i+1)+'</a></li>') );
+                }
+              }
+              if(maxPages>3 && currentPage < (maxPages-3)) {
+                $(".pagination").append( $('<li class="page-item"><a class="page-link" href="#">...</a></li>') );
+                $(".pagination").append( $('<li class="page-item"><a class="page-link" href="#" onclick="ShowData('+(maxPages-1)+','+size+',"'+searchPhrase+'")">'+(maxPages)+'</a></li>') );
+              }
+              
+            });
+        }
+
+        //Load data on start
+        ShowData(0,20,null);
     </script>
   </body>
 </html>
