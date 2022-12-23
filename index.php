@@ -90,12 +90,13 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script>
-        var myData, newData, newData2 = [];
-        var $userDeleteId = null;
+        var myData = [];
+        var userDeleteId = null;
         var currentPage = 0;
         var size = 20;
         var maxPages = 99;
         var searchPhrase = "";
+
 
         //Load data on change input
         $('#searchbox').on('change', function (){
@@ -109,9 +110,7 @@
           $(document).on('click', '#delete_button_modal', function() {
             $.ajax({
               type: 'DELETE',
-              url: 'http://192.109.244.120:8080/api/v1/profile?id='+$userDeleteId,
-              success: console.log('Deleted '+$userDeleteId),
-              failed: console.log('failed')
+              url: 'http://192.109.244.120:8080/api/v1/profile?id='+userDeleteId,
             })
             $('#modal').modal('toggle');
           })
@@ -120,14 +119,16 @@
         //Clicked on trash -> Show modal
         $(document).ready(function() {
           $(document).on('click', '.delete-button', function() {
-            $userDeleteId = $(this).attr('data-id');
+            userDeleteId = $(this).attr('data-id');
             $('#modal').modal('toggle');
           })
         })
+
         //Hide modal on cancel or X
         function hide() {
           $('#modal').modal('toggle');
         }
+
         //Hide modal on cancel or X
         function hide2() {
           $('#modal_channel').modal('toggle');
@@ -139,6 +140,7 @@
           var channelUrl = $("#channel-url").val();
           var channelPlatform = $("#channel-platform").val();
           if(channelName === "" || channelUrl === "" || channelPlatform === "null") return;
+
           $.ajax({
             type: 'POST',
             url: 'http://192.109.244.120:8080/api/v1/profile/',
@@ -157,7 +159,6 @@
             $('#modal_channel').modal('toggle');
           })
         })
-
 
         //Pagination
         function ShowData(page,size,searchPhrase) {
@@ -178,12 +179,12 @@
               for(var i=0; i<size;i++) {
                 var channelUniqueName = myData[i].url.substring(myData[i].url.lastIndexOf('/') + 1);
                 var lastChecked = myData[i].lastChecked.substr(0,10) + ' ' + myData[i].lastChecked.substr(11,5);
-                $(".table").append( $('<tr><td>'+myData[i].name+'</td><td>'+channelUniqueName+'</td><td><a href="'+myData[i].url+'">'+myData[i].media+'</a></td><td>'+lastChecked+'</td><td><a href="./profile?id='+myData[i].id+'"><i class="bi bi-card-list"></i></a></td><td><a href="#" data-id="'+myData[i].id+'" class="delete-button"><i class="bi bi-trash"></i></a></td></tr>') );
+                $(".table").append( $('<tr><td>'+myData[i].name+'</td><td>'+channelUniqueName+'</td><td><a href="'+myData[i].url+'">'+myData[i].media+'</a></td><td>'+lastChecked+'</td><td><a href="./profile.php?id='+myData[i].id+'&page=0&size=10"><i class="bi bi-card-list"></i></a></td><td><a href="#" data-id="'+myData[i].id+'" class="delete-button"><i class="bi bi-trash"></i></a></td></tr>') );
               }
               $('.pagination').empty();
               if(currentPage > 2) {
                 $(".pagination").append( $('<li class="page-item"><a class="page-link" href="#" onclick="ShowData(0,'+size+','+searchPhrase+')">1</a></li>') );
-                $(".pagination").append( $('<li class="page-item"><a class="page-link" href="#">...</a></li>') );
+                $(".pagination").append( $('<li class="page-item"><a class="page-link">...</a></li>') );
               }
               for(var i=(currentPage-2);i<=(currentPage+2);i++) {
                 if(i>=0 && i<maxPages) {
@@ -193,8 +194,8 @@
                     $(".pagination").append( $('<li class="page-item"><a class="page-link" href="#" onclick="ShowData('+i+','+size+','+searchPhrase+')">'+(i+1)+'</a></li>') );
                 }
               }
-              if(maxPages>3 && currentPage < (maxPages-3)) {
-                $(".pagination").append( $('<li class="page-item"><a class="page-link" href="#">...</a></li>') );
+              if(currentPage < (maxPages-3)) {
+                $(".pagination").append( $('<li class="page-item"><a class="page-link">...</a></li>') );
                 $(".pagination").append( $('<li class="page-item"><a class="page-link" href="#" onclick="ShowData('+(maxPages-1)+','+size+','+searchPhrase+')">'+(maxPages)+'</a></li>') );
               }
               

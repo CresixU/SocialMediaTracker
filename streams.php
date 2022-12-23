@@ -61,15 +61,13 @@
               maxPages = res.totalPages;
               myData = res.data;
               for(var i=0; i<size;i++) {
-                var interpolatedDate = myData[i].startAt.substr(0,10);
-                var interpolatedTime = myData[i].startAt.substr(11,5);
-                var streamStartTime = interpolatedDate + ' ' + interpolatedTime;
+                var streamStartTime = myData[i].startAt.substr(0,10) + ' ' + myData[i].startAt.substr(11,5);
                 $(".table").append( $('<tr><td><a href="'+myData[i].profile.url+'">'+myData[i].profile.name+'</a></td><td><a href="'+myData[i].url+'">'+myData[i].title+'</a></td><td>'+streamStartTime+'</td><td><a href="./stream.php?id='+myData[i].id+'"><i class="bi bi-bar-chart-line"></i></a></td></tr>') );
               }
               $('.pagination').empty();
               if(currentPage > 2) {
                 $(".pagination").append( $('<li class="page-item"><a class="page-link" href="#" onclick="ShowData(0,'+size+')">1</a></li>') );
-                $(".pagination").append( $('<li class="page-item"><a class="page-link" href="#">...</a></li>') );
+                $(".pagination").append( $('<li class="page-item"><a class="page-link">...</a></li>') );
               }
               for(var i=(currentPage-2);i<=(currentPage+2);i++) {
                 if(i>=0 && i<maxPages) {
@@ -79,8 +77,8 @@
                     $(".pagination").append( $('<li class="page-item"><a class="page-link" href="#" onclick="ShowData('+i+','+size+')">'+(i+1)+'</a></li>') );
                 }
               }
-              if(maxPages>3 && currentPage < (maxPages-3)) {
-                $(".pagination").append( $('<li class="page-item"><a class="page-link" href="#">...</a></li>') );
+              if(currentPage < (maxPages-3)) {
+                $(".pagination").append( $('<li class="page-item"><a class="page-link">...</a></li>') );
                 $(".pagination").append( $('<li class="page-item"><a class="page-link" href="#" onclick="ShowData('+(maxPages-1)+','+size+')">'+(maxPages)+'</a></li>') );
               }
               

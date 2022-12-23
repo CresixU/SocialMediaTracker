@@ -44,7 +44,7 @@
         <div class="row">
             <div class="col text-center">
                 <p class="title">Nazwa kanału</p>
-                <p id="channel-name"></p>
+                <p><a href="" id="channel-name"></a></p>
             </div>
             <div class="col text-center">
                 <p class="title">Źródło</p>
@@ -82,11 +82,11 @@
         var watchers = [];
         var avg = 0;
         var streamId = document.getElementById('web-user-id').innerHTML;
-        var streamTitle, streamUrl, streamSource, channelName;
+        var streamTitle, streamUrl, streamSource, channelName,channelUrl, chart;
 
         //Chart
-        var chart = new Chart(ctx, {
-            type: 'bar',
+        chart = new Chart(ctx, {
+            type: 'line',
             data: {
             labels: time,
             datasets: [{
@@ -104,43 +104,55 @@
             }
             }
         });
-
-        $.ajax({
-                url: `http://192.109.244.120:8080/api/v3/watchers/stream/`+streamId,
-            })
-            .done(res => {
-                myData = res;
-                myData.map(e => time.push(e.at.substr(11,5)));
-                myData.map(e => watchers.push(e.watchers));
-                chart.update();
-                for(var i=0; i<myData.length; i++) {
-                    avg+=parseInt(myData[i].watchers);
-                }
-                $.ajax({
-                    url: "http://192.109.244.120:8080/api/v1/streaming?page=0&size=9999",
+        var getData = function ShowChart() {
+            $.ajax({
+                    url: `http://192.109.244.120:8080/api/v3/watchers/stream/`+streamId,
                 })
                 .done(res => {
-                    var stream = res.data.find(s => s.id == streamId);
-                    streamTitle = stream.title;
-                    streamUrl = stream.url;
-                    streamSource = stream.profile.media;
-                    channelName = stream.profile.name;
-                    SetStreamData();
-                })
-            });
+                    myData = res;
+                    myData.map(e => time.push(e.at.substr(11,5)));
+                    myData.map(e => watchers.push(e.watchers));
+                    chart.data.datasets[0].data = watchers;
+                    chart.data.labels = time;
+                    chart.update();
+                    console.log("Update");
 
-        function SetStreamData() {
-            console.log(streamTitle);
+                    $.ajax({
+                        url: "http://192.109.244.120:8080/api/v1/streaming?page=0&size=9999",
+                    })
+                    .done(res => {
+                        for(var i=0; i<myData.length; i++) {
+                            avg+=parseInt(myData[i].watchers);
+                        }
+                        var stream = res.data.find(s => s.id == streamId);
+                        streamTitle = stream.title;
+                        streamUrl = stream.url;
+                        streamSource = stream.profile.media;
+                        channelName = stream.profile.name;
+                        channelUrl = "./profile.php?id="+stream.profile.id+"&page=0&size=10";
+                        DisplayStreamData();
+                    })
+                });
+            }
+
+        getData();
+        setInterval(getData, 60000);
+
+        function DisplayStreamData() {
             document.getElementById('stream-title').innerHTML = streamTitle;
             document.getElementById('stream-title').setAttribute("href", streamUrl);
             document.getElementById('channel-source').innerHTML = streamSource;
             document.getElementById('channel-name').innerHTML = channelName;
+            document.getElementById('channel-name').setAttribute("href", channelUrl);
             document.getElementById('stream-avg-views').innerHTML = Math.round(avg/=myData.length);
             document.getElementById('stream-start').innerHTML = time[0];
             if(watchers[watchers.length-1] != 0) document.getElementById('stream-end').innerHTML = "Nadal trwa";
             else document.getElementById('stream-end').innerHTML = time[time.length-1];
             document.getElementById('stream-total').innerHTML = CalcData(new Date(myData[myData.length-1].at) - new Date(myData[0].at));
             document.getElementById('stream-top-views').innerHTML = Math.max.apply(Math, watchers);
+
+            watchers = [];
+            time = []; 
         }
 
         function CalcData(ms) {
