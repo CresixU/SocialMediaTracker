@@ -81,17 +81,18 @@
                     var duration;
                     var endedAt;
                     if(!myData[i]) break;
-
+                    
+                    var startedAt = myData[i].startAt.substr(11,5)+"<br>"+myData[i].startAt.substr(0,10);
                     if(!myData[i].endAt || myData[i].endAt == undefined) {
                         duration = CalcData(new Date(Date.now()) - new Date(myData[i].startAt));
                         endedAt = "Nadal trwa";
                     }
                     else {
                         duration = CalcData(new Date(myData[i].endAt) - new Date(myData[i].startAt));
-                        endedAt = myData[i].endAt.substr(11,5);
+                        endedAt = myData[i].endAt.substr(11,5)+"<br>"+myData[i].endAt.substr(0,10);
                     }
                     
-                    $(".table").append( $('<tr><td><a href="'+myData[i].url+'">'+myData[i].title+'</a></td><td>'+myData[i].startAt.substr(11,5)+'</td><td>'+endedAt+'</td><td>'+duration+'</td></tr>') );
+                    $(".table").append( $('<tr><td><a href="'+myData[i].url+'">'+myData[i].title+'</a></td><td>'+startedAt+'</td><td>'+endedAt+'</td><td>'+duration+'</td></tr>') );
                 }
                 document.getElementById('user-name').innerHTML = myData[0].profile.name;
                 document.getElementById('user-name').setAttribute("href", myData[0].profile.url);
