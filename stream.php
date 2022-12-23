@@ -86,7 +86,7 @@
 
         //Chart
         chart = new Chart(ctx, {
-            type: 'line',
+            type: 'bar',
             data: {
             labels: time,
             datasets: [{
@@ -104,8 +104,8 @@
             }
             }
         });
-        var getData = function ShowChart() {
-            $.ajax({
+        var getData = async function ShowChart() {
+            await $.ajax({
                     url: `http://192.109.244.120:8080/api/v3/watchers/stream/`+streamId,
                 })
                 .done(res => {
@@ -134,9 +134,9 @@
                     })
                 });
             }
-
         getData();
-        setInterval(getData, 60000);
+
+        setInterval(getData, 30000);
 
         function DisplayStreamData() {
             document.getElementById('stream-title').innerHTML = streamTitle;
