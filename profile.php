@@ -35,7 +35,7 @@
             </div>
         </div>
         <div class="row text-center mt-3 mb-5">
-            <h1><a id="user-name" href="#"></a></h1>
+            <h1><a id="user-name" href="#">Ładowanie danych...</a></h1>
         </div>
         <table class="table">
             <thead>

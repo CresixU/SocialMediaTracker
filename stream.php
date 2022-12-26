@@ -39,7 +39,7 @@
             </div>
         </div>
         <div class="row text-center mt-3 mb-5">
-            <h1><a id="stream-title" href="#">TYTUŁ STREAMU</a></h1>
+            <h1><a id="stream-title" href="#">Ładowanie danych...</a></h1>
         </div>
         <div class="row">
             <div class="col text-center">
