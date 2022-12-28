@@ -44,6 +44,7 @@
                 <th>Rozpoczęty</th>
                 <th>Zakończony</th>
                 <th>Czas trwania</th>
+                <th>Szczegóły</th>
               </tr>
             </thead>
             <tbody class="contenttable">
@@ -92,7 +93,7 @@
                         endedAt = myData[i].endAt.substr(11,5)+"<br>"+myData[i].endAt.substr(0,10);
                     }
                     
-                    $(".table").append( $('<tr><td><a href="'+myData[i].url+'">'+myData[i].title+'</a></td><td>'+startedAt+'</td><td>'+endedAt+'</td><td>'+duration+'</td></tr>') );
+                    $(".table").append( $('<tr><td><a href="'+myData[i].url+'">'+myData[i].title+'</a></td><td>'+startedAt+'</td><td>'+endedAt+'</td><td>'+duration+'</td><td><a href="./stream.php?id='+myData[i].id+'"><i class="bi bi-card-list"></i></a></td></tr>') );
                 }
                 document.getElementById('user-name').innerHTML = myData[0].profile.name;
                 document.getElementById('user-name').setAttribute("href", myData[0].profile.url);

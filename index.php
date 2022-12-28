@@ -177,9 +177,16 @@
               maxPages = res.totalPages;
               myData = res.data;
               for(var i=0; i<size;i++) {
+                var lastChecked;
                 var channelUniqueName = myData[i].url.substring(myData[i].url.lastIndexOf('/') + 1);
-                var lastChecked = myData[i].lastChecked.substr(0,10) + ' ' + myData[i].lastChecked.substr(11,5);
-                $(".table").append( $('<tr><td>'+myData[i].name+'</td><td>'+channelUniqueName+'</td><td><a href="'+myData[i].url+'">'+myData[i].media+'</a></td><td>'+lastChecked+'</td><td><a href="./profile.php?id='+myData[i].id+'&page=0&size=10"><i class="bi bi-card-list"></i></a></td><td><a href="#" data-id="'+myData[i].id+'" class="delete-button"><i class="bi bi-trash"></i></a></td></tr>') );
+                if(myData[i].lastChecked == null) {
+                  lastChecked = "Nie sprawdzony";
+                }
+                else {
+                  lastChecked = myData[i].lastChecked.substr(0,10) + ' ' + myData[i].lastChecked.substr(11,5);
+                }
+                
+                $(".table").append( $('<tr><td>'+myData[i].name+'</td><td>'+channelUniqueName+'</td><td><a href="'+myData[i].url+'">'+myData[i].media+'</a></td><td>'+lastChecked+'</td><td><a href="./profile.php?id='+myData[i].id+'&page=0&size=10"><i class="bi bi-bar-chart-line"></i></a></td><td><a href="#" data-id="'+myData[i].id+'" class="delete-button"><i class="bi bi-trash"></i></a></td></tr>') );
               }
               $('.pagination').empty();
               if(currentPage > 2) {
