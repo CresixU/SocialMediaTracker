@@ -67,7 +67,7 @@
         //Pagination
         function ShowData(page,size) {
             $.ajax({
-                url: "http://192.109.244.120:8080/api/v1/streaming/profile?id="+profileId+"&page="+page+"&size="+size,
+                url: "http://195.3.220.61:8080/api/v1/streaming/profile?id="+profileId+"&page="+page+"&size="+size,
             })
                 .done(res => {
                 $('tbody').empty();

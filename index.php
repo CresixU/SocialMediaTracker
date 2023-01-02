@@ -110,7 +110,7 @@
           $(document).on('click', '#delete_button_modal', function() {
             $.ajax({
               type: 'DELETE',
-              url: 'http://192.109.244.120:8080/api/v1/profile?id='+userDeleteId,
+              url: 'http://195.3.220.61:8080/api/v1/profile?id='+userDeleteId,
             })
             $('#modal').modal('toggle');
           })
@@ -143,7 +143,7 @@
 
           $.ajax({
             type: 'POST',
-            url: 'http://192.109.244.120:8080/api/v1/profile/',
+            url: 'http://195.3.220.61:8080/api/v1/profile/',
             dataType: 'json',
             contentType: "application/json; charset=utf-8",
             data: '[{"id": null, "name": "'+channelName+'", "url": "'+channelUrl+'", "media": "'+channelPlatform+'"}]',
@@ -164,9 +164,9 @@
         function ShowData(page,size,searchPhrase) {
           var apiUrl;
           if (searchPhrase == null)
-            apiUrl = "http://192.109.244.120:8080/api/v1/profile?page="+page+"&size="+size+""
+            apiUrl = "http://195.3.220.61:8080/api/v1/profile?page="+page+"&size="+size+""
           else
-            apiUrl = "http://192.109.244.120:8080/api/v1/profile/"+searchPhrase+"?page="+page+"&size="+size+"";
+            apiUrl = "http://195.3.220.61:8080/api/v1/profile/"+searchPhrase+"?page="+page+"&size="+size+"";
 
           $.ajax({
             url: apiUrl,

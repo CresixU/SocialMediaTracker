@@ -106,7 +106,7 @@
         });
         var getData = async function ShowChart() {
             await $.ajax({
-                    url: `http://192.109.244.120:8080/api/v3/watchers/stream/`+streamId,
+                    url: `http://195.3.220.61:8080/api/v3/watchers/stream/`+streamId,
                 })
                 .done(res => {
                     myData = res;
@@ -118,7 +118,7 @@
                     console.log("Update");
 
                     $.ajax({
-                        url: "http://192.109.244.120:8080/api/v1/streaming?page=0&size=9999",
+                        url: "http://195.3.220.61:8080/api/v1/streaming?page=0&size=9999",
                     })
                     .done(res => {
                         for(var i=0; i<myData.length; i++) {
