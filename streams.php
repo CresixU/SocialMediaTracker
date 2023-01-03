@@ -10,6 +10,7 @@
     
   </head>
   <body>
+  <?php $api = require("config.php"); ?>
     <div class="container">
         <!-- NAV BAR -->
         <div class="nav d-flex justify-content-center">
@@ -49,12 +50,13 @@
         var currentPage = 0;
         var size = 10;
         var maxPages = 99;
+        var api_url = "<?php echo $api ?>";
 
          //Pagination
          function ShowData(page,size) {
           currentPage = page;
           $.ajax({
-            url: "http://195.3.220.61:8080/api/v1/streaming?page="+page+"&size="+size,
+            url: api_url+"/api/v1/streaming?page="+page+"&size="+size,
           })
             .done(res => {
               $('tbody').empty();

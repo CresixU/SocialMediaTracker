@@ -28,6 +28,7 @@
   </head>
   <body>
     <?php echo "<span id='web-user-id' style='display: none;'>" . $_GET['id']."</span>";?>
+    <?php $api = require("config.php"); ?>
     <div class="container">
         <!-- NAV BAR -->
         <div class="nav d-flex justify-content-center">
@@ -83,6 +84,7 @@
         var avg = 0;
         var streamId = document.getElementById('web-user-id').innerHTML;
         var streamTitle, streamUrl, streamSource, channelName,channelUrl, chart;
+        var api_url = "<?php echo $api ?>";
 
         //Chart
         chart = new Chart(ctx, {
@@ -106,7 +108,7 @@
         });
         var getData = async function ShowChart() {
             await $.ajax({
-                    url: `http://195.3.220.61:8080/api/v3/watchers/stream/`+streamId,
+                    url: api_url+"/api/v3/watchers/stream/"+streamId,
                 })
                 .done(res => {
                     myData = res;
@@ -118,7 +120,7 @@
                     console.log("Update");
 
                     $.ajax({
-                        url: "http://195.3.220.61:8080/api/v1/streaming?page=0&size=9999",
+                        url: api_url+"/api/v1/streaming?page=0&size=9999",
                     })
                     .done(res => {
                         for(var i=0; i<myData.length; i++) {

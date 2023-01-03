@@ -24,6 +24,7 @@
   </head>
   <body>
     <?php echo "<span id='web-user-id' style='display: none;'>" . $_GET['id']."</span>";?>
+    <?php $api = require("config.php"); ?>
     <div class="container">
         <!-- NAV BAR -->
         <div class="nav d-flex justify-content-center">
@@ -63,11 +64,12 @@
         var currentPage = 0;
         var size = 20;
         var maxPages = 99;
+        var api_url = "<?php echo $api ?>";
 
         //Pagination
         function ShowData(page,size) {
             $.ajax({
-                url: "http://195.3.220.61:8080/api/v1/streaming/profile?id="+profileId+"&page="+page+"&size="+size,
+                url: api_url+"/api/v1/streaming/profile?id="+profileId+"&page="+page+"&size="+size,
             })
                 .done(res => {
                 $('tbody').empty();

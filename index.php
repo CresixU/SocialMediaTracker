@@ -9,6 +9,7 @@
     <link href="css/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   </head>
   <body>
+    <?php $api = require("config.php"); ?>
     <!-- Delete user modal -->
     <div class="modal" tabindex="-1" id="modal" role="dialog">
       <div class="modal-dialog" role="document">
@@ -97,6 +98,7 @@
         var maxPages = 99;
         var searchPhrase = "";
 
+        var api_url = "<?php echo $api ?>";
 
         //Load data on change input
         $('#searchbox').on('change', function (){
@@ -110,7 +112,7 @@
           $(document).on('click', '#delete_button_modal', function() {
             $.ajax({
               type: 'DELETE',
-              url: 'http://195.3.220.61:8080/api/v1/profile?id='+userDeleteId,
+              url: api_url+'/api/v1/profile?id='+userDeleteId,
             })
             $('#modal').modal('toggle');
           })
@@ -143,7 +145,7 @@
 
           $.ajax({
             type: 'POST',
-            url: 'http://195.3.220.61:8080/api/v1/profile/',
+            url: api_url+'/api/v1/profile/',
             dataType: 'json',
             contentType: "application/json; charset=utf-8",
             data: '[{"id": null, "name": "'+channelName+'", "url": "'+channelUrl+'", "media": "'+channelPlatform+'"}]',
@@ -164,9 +166,9 @@
         function ShowData(page,size,searchPhrase) {
           var apiUrl;
           if (searchPhrase == null)
-            apiUrl = "http://195.3.220.61:8080/api/v1/profile?page="+page+"&size="+size+""
+            apiUrl = api_url+"/api/v1/profile?page="+page+"&size="+size+""
           else
-            apiUrl = "http://195.3.220.61:8080/api/v1/profile/"+searchPhrase+"?page="+page+"&size="+size+"";
+            apiUrl = api_url+"/api/v1/profile/"+searchPhrase+"?page="+page+"&size="+size+"";
 
           $.ajax({
             url: apiUrl,
