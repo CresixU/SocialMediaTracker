@@ -112,8 +112,14 @@
                 })
                 .done(res => {
                     myData = res;
-                    myData.map(e => time.push(e.at.substr(11,5)));
-                    myData.map(e => watchers.push(e.watchers));
+                    for(var k=0;k<myData.length;k++) {
+                        if(myData[k].watchers > 0) {
+                            time.push(myData[k].at.substr(11,5));
+                            watchers.push(myData[k].watchers)
+                        }
+                    }
+                    //myData.map(e => time.push(e.at.substr(11,5)));
+                    //myData.map(e => watchers.push(e.watchers));
                     chart.data.datasets[0].data = watchers;
                     chart.data.labels = time;
                     chart.update();
@@ -123,8 +129,8 @@
                         url: api_url+"/api/v1/streaming?page=0&size=9999",
                     })
                     .done(res => {
-                        for(var i=0; i<myData.length; i++) {
-                            avg+=parseInt(myData[i].watchers);
+                        for(var i=0; i<watchers.length; i++) {
+                            avg+=parseInt(watchers[i]);
                         }
                         var stream = res.data.find(s => s.id == streamId);
                         streamTitle = stream.title;
@@ -146,7 +152,7 @@
             document.getElementById('channel-source').innerHTML = streamSource;
             document.getElementById('channel-name').innerHTML = channelName;
             document.getElementById('channel-name').setAttribute("href", channelUrl);
-            document.getElementById('stream-avg-views').innerHTML = Math.round(avg/=myData.length);
+            document.getElementById('stream-avg-views').innerHTML = Math.round(avg/=watchers.length);
             document.getElementById('stream-start').innerHTML = time[0];
             if(watchers[watchers.length-1] != 0) document.getElementById('stream-end').innerHTML = "Nadal trwa";
             else document.getElementById('stream-end').innerHTML = time[time.length-1];
