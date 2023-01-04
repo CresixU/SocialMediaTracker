@@ -95,7 +95,16 @@
             datasets: [{
                 label: 'Widzowie',
                 data: watchers,
-                borderWidth: 1
+                backgroundColor: color => {
+                    let colors = ReturnColorByIndex(color.index,5);//color.index > 288 ? 'rgb(75,192,192)' : 'rgba(255,26,104)';
+                    return colors;
+                },
+                borderColor: color => {
+                    let colors = ReturnColorByIndex(color.index,5);//color.index > 288 ? 'rgb(75,192,192)' : 'rgba(255,26,104)';
+                    return colors;
+                },
+                borderWidth: 3,
+                fill: true
             }]
             },
             options: {
@@ -142,6 +151,15 @@
         setInterval(getData, 60000);
 
         function DisplayStreamData() {
+            var endedAt, duration;
+            if(!stream.end || stream.end == undefined) {
+                endedAt = "Nadal trwa";
+            }
+            else {
+                endedAt = stream.end.substr(11,5)+"<br>"+stream.end.substr(0,10);
+            }
+            duration = CalcData(new Date(myData[myData.length-1].at) - new Date(myData[0].at));
+
             document.getElementById('stream-title').innerHTML = streamTitle;
             document.getElementById('stream-title').setAttribute("href", streamUrl);
             document.getElementById('channel-source').innerHTML = streamSource;
@@ -149,10 +167,9 @@
             document.getElementById('channel-name').setAttribute("href", channelUrl);
             if(isNaN(avg) || avg == "0") document.getElementById('stream-avg-views').innerHTML = "0";
             else document.getElementById('stream-avg-views').innerHTML = Math.round(avg/=watchers.length);
-            document.getElementById('stream-start').innerHTML = stream.start.substr(11,5);//time[0];
-            if(watchers[watchers.length-1] != 0) document.getElementById('stream-end').innerHTML = "Nadal trwa";
-            else document.getElementById('stream-end').innerHTML = time[time.length-1];
-            document.getElementById('stream-total').innerHTML = CalcData(new Date(myData[myData.length-1].at) - new Date(myData[0].at));
+            document.getElementById('stream-start').innerHTML = stream.start.substr(11,5);
+            document.getElementById('stream-end').innerHTML = endedAt;
+            document.getElementById('stream-total').innerHTML = duration;
             document.getElementById('stream-top-views').innerHTML = Math.max.apply(Math, watchers);
 
             watchers = [];
@@ -165,6 +182,20 @@
             min = Math.floor(seconds/60);
             hours = Math.floor(min/60);
             return hours+"h "+min%60+"m "+seconds%60%60+"s";
+        }
+
+        //Every day in a week has own color
+        function ReturnColorByIndex(index,refresh) {
+            var dayInMinutes = 1440;
+            var currentDay = index%(dayInMinutes*7);
+            var breakpoint = dayInMinutes/refresh;
+            if(currentDay < breakpoint) return 'rgb(75,192,192)'
+            else if(currentDay >= breakpoint) return 'rgb(149,39,196)';
+            else if(currentDay >= breakpoint*2) return 'rgb(199,30,171)';
+            else if(currentDay >= breakpoint*3) return 'rgb(199,35,30)';
+            else if(currentDay >= breakpoint*4) return 'rgb(199,112,30)';
+            else if(currentDay >= breakpoint*5) return 'rgb(168,112,30)';
+            else if(currentDay >= breakpoint*6) return 'rgb(70,199,30)';
         }
     </script>
   </body>
