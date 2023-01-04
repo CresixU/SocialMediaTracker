@@ -85,6 +85,7 @@
         var streamId = document.getElementById('web-user-id').innerHTML;
         var streamTitle, streamUrl, streamSource, channelName,channelUrl, chart;
         var api_url = "<?php echo $api ?>";
+        var stream;
 
         //Chart
         chart = new Chart(ctx, {
@@ -100,8 +101,8 @@
             options: {
             scales: {
                 y: {
-                    beginAtZero: false,
-                    suggestedMin: 1
+                    beginAtZero: true,
+                    suggestedMin: 0
                 }
             }
             }
@@ -111,40 +112,34 @@
                     url: api_url+"/api/v3/watchers/stream/"+streamId,
                 })
                 .done(res => {
-                    myData = res;
+                    myData = res.data;
+                    stream = res.stream;
                     for(var k=0;k<myData.length;k++) {
                         if(myData[k].watchers > 0) {
                             time.push(myData[k].at.substr(11,5));
                             watchers.push(myData[k].watchers)
                         }
                     }
-                    //myData.map(e => time.push(e.at.substr(11,5)));
-                    //myData.map(e => watchers.push(e.watchers));
                     chart.data.datasets[0].data = watchers;
                     chart.data.labels = time;
+
+                    for(var i=0; i<watchers.length; i++) {
+                        avg+=parseInt(watchers[i]);
+                    }
+                    streamTitle = stream.title;
+                    streamUrl = stream.url;
+                    streamSource = stream.profile.media;
+                    channelName = stream.profile.name;
+                    channelUrl = "./profile.php?id="+stream.profile.id+"&page=0&size=10";
+                    DisplayStreamData();
+
                     chart.update();
                     console.log("Update");
-
-                    $.ajax({
-                        url: api_url+"/api/v1/streaming?page=0&size=9999",
-                    })
-                    .done(res => {
-                        for(var i=0; i<watchers.length; i++) {
-                            avg+=parseInt(watchers[i]);
-                        }
-                        var stream = res.data.find(s => s.id == streamId);
-                        streamTitle = stream.title;
-                        streamUrl = stream.url;
-                        streamSource = stream.profile.media;
-                        channelName = stream.profile.name;
-                        channelUrl = "./profile.php?id="+stream.profile.id+"&page=0&size=10";
-                        DisplayStreamData();
-                    })
                 });
             }
         getData();
 
-        setInterval(getData, 30000);
+        setInterval(getData, 60000);
 
         function DisplayStreamData() {
             document.getElementById('stream-title').innerHTML = streamTitle;
@@ -152,8 +147,9 @@
             document.getElementById('channel-source').innerHTML = streamSource;
             document.getElementById('channel-name').innerHTML = channelName;
             document.getElementById('channel-name').setAttribute("href", channelUrl);
-            document.getElementById('stream-avg-views').innerHTML = Math.round(avg/=watchers.length);
-            document.getElementById('stream-start').innerHTML = time[0];
+            if(isNaN(avg) || avg == "0") document.getElementById('stream-avg-views').innerHTML = "0";
+            else document.getElementById('stream-avg-views').innerHTML = Math.round(avg/=watchers.length);
+            document.getElementById('stream-start').innerHTML = stream.start.substr(11,5);//time[0];
             if(watchers[watchers.length-1] != 0) document.getElementById('stream-end').innerHTML = "Nadal trwa";
             else document.getElementById('stream-end').innerHTML = time[time.length-1];
             document.getElementById('stream-total').innerHTML = CalcData(new Date(myData[myData.length-1].at) - new Date(myData[0].at));
