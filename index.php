@@ -51,7 +51,7 @@
         </form>
       </div>
     </div>
-    <div class="container">
+    <div class="container mb-5">
         <!-- NAV BAR -->
         <div class="nav d-flex justify-content-center">
             <div>
@@ -80,11 +80,19 @@
             <tbody class="contenttable">
             </tbody>
           </table>
-          <nav>
-            <ul class="pagination justify-content-center">
-              
-            </ul>
-          </nav>
+          <div class="row pagination-container">
+            <div class="col col-3">
+              <input type="number" class="mx-auto" id="page-number-input" placeholder="Wpisz stronę" min="1" style="float: left;">
+            </div>
+            <div class="col col-6">
+              <ul class="pagination justify-content-center">
+                
+              </ul>
+            </div>
+            <div class="col col-3">
+              <input type="number" class="mx-auto" id="page-size-input" placeholder="Wyniki na stronę" min="1" max="100" style="float:right;">
+            </div>
+          </div>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
@@ -213,6 +221,24 @@
 
         //Load data on start
         ShowData(0,20,null);
+
+
+        $('#page-number-input').on('input', function() {
+          let pageInput = $('#page-number-input').val()-1;
+          if(pageInput == null || pageInput == undefined || pageInput == "" ) pageInput=0;
+          if(pageInput >= 0 && pageInput < maxPages) {
+            currentPage = pageInput;
+            ShowData(currentPage,size);
+          }
+        })
+        $('#page-size-input').on('input', function() {
+          sizeInput = $('#page-size-input').val();
+          if(sizeInput == null || sizeInput == undefined || sizeInput == "" ) sizeInput=size;
+          {
+            size = sizeInput;
+            ShowData(currentPage,size);
+          }
+        })
     </script>
   </body>
 </html>

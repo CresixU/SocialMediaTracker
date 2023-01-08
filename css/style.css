@@ -92,3 +92,17 @@ table i {
     background-color: rgb(194, 194, 194) !important;
 }
 
+.pagination-container input {
+    width: 200px;
+    height: 45px;
+    background-color: transparent !important;
+    border-bottom: 1px solid rgb(0, 173, 181) !important;
+    color:rgb(238, 238, 238);
+    border-radius: 5px;
+    padding: 0px 10px;
+    border: none;
+}
+.pagination-container input:focus {
+    outline: none;
+}
+

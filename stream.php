@@ -96,11 +96,11 @@
                 label: 'Widzowie',
                 data: watchers,
                 backgroundColor: color => {
-                    let colors = ReturnColorByIndex(color.index,5);//color.index > 288 ? 'rgb(75,192,192)' : 'rgba(255,26,104)';
+                    let colors = ReturnColorByIndex(color.index,5);
                     return colors;
                 },
                 borderColor: color => {
-                    let colors = ReturnColorByIndex(color.index,5);//color.index > 288 ? 'rgb(75,192,192)' : 'rgba(255,26,104)';
+                    let colors = ReturnColorByIndex(color.index,5);
                     return colors;
                 },
                 borderWidth: 3,
@@ -186,16 +186,12 @@
 
         //Every day in a week has own color
         function ReturnColorByIndex(index,refresh) {
-            var dayInMinutes = 1440;
-            var currentDay = index%(dayInMinutes*7);
-            var breakpoint = dayInMinutes/refresh;
+            var newColorEveryMinutes = 1440; //24h
+            var currentDay = index%(newColorEveryMinutes*7);
+            var breakpoint = newColorEveryMinutes/refresh;
             if(currentDay < breakpoint) return 'rgb(75,192,192)'
-            else if(currentDay >= breakpoint) return 'rgb(149,39,196)';
-            else if(currentDay >= breakpoint*2) return 'rgb(199,30,171)';
-            else if(currentDay >= breakpoint*3) return 'rgb(199,35,30)';
-            else if(currentDay >= breakpoint*4) return 'rgb(199,112,30)';
-            else if(currentDay >= breakpoint*5) return 'rgb(168,112,30)';
-            else if(currentDay >= breakpoint*6) return 'rgb(70,199,30)';
+            else if(currentDay >= breakpoint) return 'rgb(75,139,192)';
+            else if(currentDay >= breakpoint*2) return 'rgb(75,139,155)';
         }
     </script>
   </body>

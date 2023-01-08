@@ -11,7 +11,7 @@
   </head>
   <body>
   <?php $api = require("config.php"); ?>
-    <div class="container">
+    <div class="container mb-5">
         <!-- NAV BAR -->
         <div class="nav d-flex justify-content-center">
         <div>
@@ -28,6 +28,7 @@
                     <th>Nazwa kanału</th>
                     <th>Tytuł</th>
                     <th>Rozpoczęty</th>
+                    <th>Wykryty</th>
                     <th>Szczegóły</th>
                 </tr>
                 </thead>
@@ -35,12 +36,20 @@
                 </tbody>
             </table>
         </div>
-        <nav>
-          <ul class="pagination justify-content-center">
-              
-          </ul>
-        </nav>
-    </div>
+        <div class="row pagination-container">
+            <div class="col col-3">
+              <input type="number" class="mx-auto" id="page-number-input" placeholder="Wpisz stronę" min="1" style="float: left;">
+            </div>
+            <div class="col col-6">
+              <ul class="pagination justify-content-center">
+                
+              </ul>
+            </div>
+            <div class="col col-3">
+              <input type="number" class="mx-auto" id="page-size-input" placeholder="Wyniki na stronę" min="1" max="100" style="float:right;">
+            </div>
+          </div>
+      </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
@@ -64,7 +73,7 @@
               myData = res.data;
               for(var i=0; i<size;i++) {
                 var streamStartTime = myData[i].startAt.substr(0,10) + ' ' + myData[i].startAt.substr(11,5);
-                $(".table").append( $('<tr><td><a href="'+myData[i].profile.url+'">'+myData[i].profile.name+'</a></td><td><a href="'+myData[i].url+'">'+myData[i].title+'</a></td><td>'+streamStartTime+'</td><td><a href="./stream.php?id='+myData[i].id+'"><i class="bi bi-bar-chart-line"></i></a></td></tr>') );
+                $(".table").append( $('<tr><td><a href="'+myData[i].profile.url+'">'+myData[i].profile.name+'</a></td><td><a href="'+myData[i].url+'">'+myData[i].title+'</a></td><td>'+streamStartTime+'</td><td>CreatedAt</td><td><a href="./stream.php?id='+myData[i].id+'"><i class="bi bi-bar-chart-line"></i></a></td></tr>') );
               }
               $('.pagination').empty();
               if(currentPage > 2) {
@@ -88,7 +97,24 @@
         }
 
         //Load data on start
-        ShowData(0,10);
+        ShowData(0,size);
+        
+        $('#page-number-input').on('input', function() {
+          let pageInput = $('#page-number-input').val()-1;
+          if(pageInput == null || pageInput == undefined || pageInput == "" ) pageInput=0;
+          if(pageInput >= 0 && pageInput < maxPages) {
+            currentPage = pageInput;
+            ShowData(currentPage,size);
+          }
+        })
+        $('#page-size-input').on('input', function() {
+          sizeInput = $('#page-size-input').val();
+          if(sizeInput == null || sizeInput == undefined || sizeInput == "" ) sizeInput=size;
+          {
+            size = sizeInput;
+            ShowData(currentPage,size);
+          }
+        })
     </script>
   </body>
 </html>
