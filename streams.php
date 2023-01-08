@@ -73,7 +73,8 @@
               myData = res.data;
               for(var i=0; i<size;i++) {
                 var streamStartTime = myData[i].startAt.substr(0,10) + ' ' + myData[i].startAt.substr(11,5);
-                $(".table").append( $('<tr><td><a href="'+myData[i].profile.url+'">'+myData[i].profile.name+'</a></td><td><a href="'+myData[i].url+'">'+myData[i].title+'</a></td><td>'+streamStartTime+'</td><td>CreatedAt</td><td><a href="./stream.php?id='+myData[i].id+'"><i class="bi bi-bar-chart-line"></i></a></td></tr>') );
+                var streamAddedAt = myData[i].added_at.substr(0,10) + ' ' + myData[i].added_at.substr(11,5);
+                $(".table").append( $('<tr><td><a href="'+myData[i].profile.url+'">'+myData[i].profile.name+'</a></td><td><a href="'+myData[i].url+'">'+myData[i].title+'</a></td><td>'+streamStartTime+'</td><td>'+streamAddedAt+'</td><td><a href="./stream.php?id='+myData[i].id+'"><i class="bi bi-bar-chart-line"></i></a></td></tr>') );
               }
               $('.pagination').empty();
               if(currentPage > 2) {
