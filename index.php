@@ -69,7 +69,7 @@
           <table class="table">
             <thead>
               <tr>
-                <th>Nazwa kanału</th>
+                <th style="min-width: 180px">Nazwa kanału</th>
                 <th>ID</th>
                 <th>Źródło</th>
                 <th>Ostatnio sprawdzony</th>
@@ -109,7 +109,7 @@
         var api_url = "<?php echo $api ?>";
 
         //Load data on change input
-        $('#searchbox').on('change', function (){
+        $('#searchbox').on('input', function() {
           $('tbody').empty();
           var searchPhrase = $('#searchbox').val();
           ShowData(currentPage,size,searchPhrase)
@@ -222,11 +222,10 @@
         //Load data on start
         ShowData(0,20,null);
 
-
         $('#page-number-input').on('input', function() {
           let pageInput = $('#page-number-input').val()-1;
           if(pageInput == null || pageInput == undefined || pageInput == "" ) pageInput=0;
-          if(pageInput >= 0 && pageInput < maxPages) {
+          if(pageInput >= 0 && pageInput <= maxPages) {
             currentPage = pageInput;
             ShowData(currentPage,size);
           }
@@ -234,9 +233,10 @@
         $('#page-size-input').on('input', function() {
           sizeInput = $('#page-size-input').val();
           if(sizeInput == null || sizeInput == undefined || sizeInput == "" ) sizeInput=size;
-          {
+          if(sizeInput >= 0 )
+           {
             size = sizeInput;
-            ShowData(currentPage,size);
+            ShowData(0,size);
           }
         })
     </script>

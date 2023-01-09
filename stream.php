@@ -49,7 +49,7 @@
             </div>
             <div class="col text-center">
                 <p class="title">Źródło</p>
-                <p id="channel-source"></p>
+                <p><a href="" id="channel-source"></a></p>
             </div>
             <div class="col text-center">
                 <p class="title">Rozpoczęty</p>
@@ -151,7 +151,7 @@
         setInterval(getData, 60000);
 
         function DisplayStreamData() {
-            var endedAt, duration;
+            var endedAt, duration, startedAt;
             if(!stream.end || stream.end == undefined) {
                 endedAt = "Nadal trwa";
             }
@@ -159,15 +159,17 @@
                 endedAt = stream.end.substr(11,5)+"<br>"+stream.end.substr(0,10);
             }
             duration = CalcData(new Date(myData[myData.length-1].at) - new Date(myData[0].at));
+            startedAt = stream.start.substr(11,5)+"<br>"+stream.start.substr(0,10);
 
             document.getElementById('stream-title').innerHTML = streamTitle;
             document.getElementById('stream-title').setAttribute("href", streamUrl);
             document.getElementById('channel-source').innerHTML = streamSource;
+            document.getElementById('channel-source').setAttribute("href", stream.profile.url);
             document.getElementById('channel-name').innerHTML = channelName;
             document.getElementById('channel-name').setAttribute("href", channelUrl);
             if(isNaN(avg) || avg == "0") document.getElementById('stream-avg-views').innerHTML = "0";
             else document.getElementById('stream-avg-views').innerHTML = Math.round(avg/=watchers.length);
-            document.getElementById('stream-start').innerHTML = stream.start.substr(11,5);
+            document.getElementById('stream-start').innerHTML = startedAt;
             document.getElementById('stream-end').innerHTML = endedAt;
             document.getElementById('stream-total').innerHTML = duration;
             document.getElementById('stream-top-views').innerHTML = Math.max.apply(Math, watchers);
