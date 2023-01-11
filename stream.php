@@ -96,11 +96,11 @@
                 label: 'Widzowie',
                 data: watchers,
                 backgroundColor: color => {
-                    let colors = ReturnColorByIndex(color.index,5);
+                    let colors = ReturnColorByIndex(color.index);
                     return colors;
                 },
                 borderColor: color => {
-                    let colors = ReturnColorByIndex(color.index,5);
+                    let colors = ReturnColorByIndex(color.index);
                     return colors;
                 },
                 borderWidth: 3,
@@ -117,6 +117,7 @@
             }
         });
         var getData = async function ShowChart() {
+            if(time.length == 0) time,watchers = [];
             await $.ajax({
                     url: api_url+"/api/v3/watchers/stream/"+streamId,
                 })
@@ -125,12 +126,12 @@
                     stream = res.stream;
                     for(var k=0;k<myData.length;k++) {
                         if(myData[k].watchers > 0) {
-                            time.push(myData[k].at.substr(11,5));
+                            time.push(myData[k].at);
                             watchers.push(myData[k].watchers)
                         }
                     }
                     chart.data.datasets[0].data = watchers;
-                    chart.data.labels = time;
+                    chart.data.labels = time.map(t => t.substr(11,5));
 
                     for(var i=0; i<watchers.length; i++) {
                         avg+=parseInt(watchers[i]);
@@ -172,10 +173,7 @@
             document.getElementById('stream-start').innerHTML = startedAt;
             document.getElementById('stream-end').innerHTML = endedAt;
             document.getElementById('stream-total').innerHTML = duration;
-            document.getElementById('stream-top-views').innerHTML = Math.max.apply(Math, watchers);
-
-            watchers = [];
-            time = []; 
+            document.getElementById('stream-top-views').innerHTML = Math.max.apply(Math, watchers);  
         }
 
         function CalcData(ms) {
@@ -186,14 +184,12 @@
             return hours+"h "+min%60+"m "+seconds%60%60+"s";
         }
 
-        //Every day in a week has own color
-        function ReturnColorByIndex(index,refresh) {
-            var newColorEveryMinutes = 1440; //24h
-            var currentDay = index%(newColorEveryMinutes*7);
-            var breakpoint = newColorEveryMinutes/refresh;
-            if(currentDay < breakpoint) return 'rgb(75,192,192)'
-            else if(currentDay >= breakpoint) return 'rgb(75,139,192)';
-            else if(currentDay >= breakpoint*2) return 'rgb(75,139,155)';
+        function ReturnColorByIndex(index) {
+            if(time.length == 0) return;
+            var day = parseInt(time[index].substr(8,2))%3;
+            if(day == 0) return 'rgb(75,192,192)'
+            else if(day == 1) return 'rgb(150, 156, 2)';
+            else if(day == 2) return 'rgb(28, 176, 77)';    
         }
     </script>
   </body>
