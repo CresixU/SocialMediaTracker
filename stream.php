@@ -103,7 +103,7 @@
                     let colors = ReturnColorByIndex(color.index);
                     return colors;
                 },
-                borderWidth: 3,
+                borderWidth: 0,
                 fill: true
             }]
             },
@@ -117,7 +117,7 @@
             }
         });
         var getData = async function ShowChart() {
-            if(time.length == 0) time,watchers = [];
+            time = [],watchers = [];
             await $.ajax({
                     url: api_url+"/api/v3/watchers/stream/"+streamId,
                 })
