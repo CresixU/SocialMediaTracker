@@ -64,7 +64,7 @@
         <div>
           <div>
             <input type="text" id="searchbox" placeholder="Znajdź kanał">
-            <div style="float:left;padding:10px 15px;">Status recaptcha: <span id="socket-status"></span> </div>
+            <div style="float:left;padding:10px 15px;">Status recaptcha: <span id="socket-status">Disconnected</span> </div>
             <button class="btn-addnew-channel" id="show_modal_new_channel">DODAJ KANAŁ</button>
           </div>
           <table class="table">
